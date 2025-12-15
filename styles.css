@@ -1,0 +1,148 @@
+:root {
+    --primary-yellow: #FFFF00;
+    --header-bg: #f8f9fa;
+    --day-green-bg: #e8f5e9;
+    --day-blue-bg: #e3f2fd;
+    --border-color: #dee2e6;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+header {
+    background-color: var(--primary-yellow);
+    text-align: center;
+    padding: 15px;
+    font-weight: 900;
+    font-size: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+/* Main Layout */
+.container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Left Side: Schedule List */
+.schedule-container {
+    flex: 6;
+    overflow-y: auto;
+    padding: 20px;
+    background: white;
+}
+
+/* Right Side: Map */
+.map-container {
+    flex: 4;
+    background: #eee;
+    position: relative;
+    border-left: 2px solid #ccc;
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    table-layout: fixed;
+}
+
+th, td {
+    border: 1px solid var(--border-color);
+    padding: 8px;
+    text-align: center;
+    vertical-align: middle;
+    word-wrap: break-word;
+}
+
+/* Column Widths */
+th:nth-child(1) { width: 20%; } /* 장소 */
+th:nth-child(2) { width: 20%; } /* 시간 */
+th:nth-child(3) { width: 45%; } /* 비고/메모 */
+th:nth-child(4) { width: 15%; } /* 지도 */
+
+th {
+    background-color: #333;
+    color: white;
+    position: sticky;
+    top: 0;
+}
+
+.day-header {
+    text-align: left;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 10px;
+    margin-top: 20px;
+    border-left: 5px solid #333;
+}
+
+.day-green { background-color: var(--day-green-bg); border-left-color: #4CAF50; }
+.day-blue { background-color: var(--day-blue-bg); border-left-color: #2196F3; }
+
+.btn-map {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.btn-map:hover {
+    background-color: #357ae8;
+}
+
+.note {
+    text-align: left;
+    font-size: 0.8rem;
+    color: #333;
+    line-height: 1.4;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column-reverse;
+    }
+    .map-container {
+        flex: none;
+        height: 300px;
+        border-left: none;
+        border-top: 2px solid #ccc;
+    }
+    .schedule-container {
+        flex: 1;
+    }
+    th, td {
+        font-size: 0.75rem;
+        padding: 5px;
+    }
+    /* Adjust columns for mobile */
+    th:nth-child(1) { width: 25%; }
+    th:nth-child(2) { width: 20%; }
+    th:nth-child(3) { width: 35%; }
+    th:nth-child(4) { width: 20%; }
+}
