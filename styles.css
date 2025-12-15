@@ -60,10 +60,12 @@ iframe {
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin-bottom: 30px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    table-layout: fixed;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
 th, td {
@@ -71,26 +73,28 @@ th, td {
     padding: 8px;
     text-align: center;
     vertical-align: middle;
-    word-wrap: break-word;
 }
-
-/* Column Widths */
-th:nth-child(1) { width: 20%; } /* 장소 */
-th:nth-child(2) { width: 20%; } /* 시간 */
-th:nth-child(3) { width: 45%; } /* 비고/메모 */
-th:nth-child(4) { width: 15%; } /* 지도 */
 
 th {
     background-color: #333;
     color: white;
-    position: sticky;
-    top: 0;
+}
+
+/* Column Specifics */
+.col-note {
+    min-width: 250px;
+    white-space: pre-wrap;
+    text-align: left;
+}
+td.note {
+    white-space: pre-wrap;
+    text-align: left;
 }
 
 .day-header {
     text-align: left;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     padding: 10px;
     margin-top: 20px;
     border-left: 5px solid #333;
@@ -99,27 +103,33 @@ th {
 .day-green { background-color: var(--day-green-bg); border-left-color: #4CAF50; }
 .day-blue { background-color: var(--day-blue-bg); border-left-color: #2196F3; }
 
+/* Button & Link Styles */
 .btn-map {
     background-color: #4285F4;
     color: white;
     border: none;
-    padding: 5px 10px;
+    padding: 4px 8px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.8rem;
     transition: background 0.2s;
-    white-space: nowrap;
 }
-
 .btn-map:hover {
     background-color: #357ae8;
 }
 
-.note {
-    text-align: left;
+a {
+    color: #0066cc;
+    text-decoration: none;
     font-size: 0.8rem;
-    color: #333;
-    line-height: 1.4;
+    display: inline-block;
+    padding: 2px 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f8f9fa;
+}
+a:hover {
+    background: #e9ecef;
 }
 
 /* Mobile Responsive */
@@ -129,20 +139,15 @@ th {
     }
     .map-container {
         flex: none;
-        height: 300px;
+        height: 250px;
         border-left: none;
         border-top: 2px solid #ccc;
     }
     .schedule-container {
         flex: 1;
+        padding: 10px;
     }
-    th, td {
+    table {
         font-size: 0.75rem;
-        padding: 5px;
     }
-    /* Adjust columns for mobile */
-    th:nth-child(1) { width: 25%; }
-    th:nth-child(2) { width: 20%; }
-    th:nth-child(3) { width: 35%; }
-    th:nth-child(4) { width: 20%; }
 }
