@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도쿄 신주쿠 여행 일정표</title>
+    <style>
+        :root {
+            --primary-yellow: #FFFF00;
+            --header-bg: #f8f9fa;
+            --day-green-bg: #e8f5e9; /* Green tone from image */
+            --day-blue-bg: #e3f2fd;  /* Blue tone from image */
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary-yellow);
+            text-align: center;
+            padding: 15px;
+            font-weight: 900;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        /* Main Layout */
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Left Side: Schedule List */
+        .schedule-container {
+            flex: 6;
+            overflow-y: auto;
+            padding: 20px;
+            background: white;
+        }
+
+        /* Right Side: Map */
+        .map-container {
+            flex: 4;
+            background: #eee;
+            position: relative;
+            border-left: 2px solid #ccc;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            table-layout: fixed; /* Fixed layout for better text wrapping */
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: center;
+            vertical-align: middle;
+            word-wrap: break-word;
+        }
+        
+        /* Column Widths */
+        th:nth-child(1) { width: 20%; } /* 장소 */
+        th:nth-child(2) { width: 20%; } /* 시간 */
+        th:nth-child(3) { width: 45%; } /* 비고/메모 */
+        th:nth-child(4) { width: 15%; } /* 지도 */
+
+        th {
+            background-color: #333;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+
+        .day-header {
+            text-align: left;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 10px;
+            margin-top: 20px;
+            border-left: 5px solid #333;
+        }
+
+        .day-green { background-color: var(--day-green-bg); border-left-color: #4CAF50; }
+        .day-blue { background-color: var(--day-blue-bg); border-left-color: #2196F3; }
+
+        .btn-map {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-map:hover {
+            background-color: #357ae8;
+        }
+
+        .note {
+            text-align: left;
+            font-size: 0.8rem;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column-reverse;
+            }
+            .map-container {
+                flex: none;
+                height: 300px;
+                border-left: none;
+                border-top: 2px solid #ccc;
+            }
+            .schedule-container {
+                flex: 1;
+            }
+            th, td {
+                font-size: 0.75rem;
+                padding: 5px;
+            }
+            /* Adjust columns for mobile */
+            th:nth-child(1) { width: 25%; }
+            th:nth-child(2) { width: 20%; }
+            th:nth-child(3) { width: 35%; }
+            th:nth-child(4) { width: 20%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    도쿄 신주쿠 여행!!!
+</header>
+
+<div class="container">
+    <div class="schedule-container">
+        
+        <div class="day-header day-blue">1일차: 인천 -> 신주쿠 이동 & 골든가이</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>장소</th>
+                    <th>시간</th>
+                    <th>내용/비고</th>
+                    <th>지도</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>인천공항 -> 일본</td>
+                    <td>오후 출발<br>저녁 도착</td>
+                    <td class="note">- 나리타(NEX) 구글 예약 필수!<br>- 부모님 동반 시 편한 이동 추천</td>
+                    <td><button class="btn-map" onclick="searchMap('Narita Airport')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>숙소 (신주쿠)</td>
+                    <td>체크인</td>
+                    <td class="note">- 태생이 아사(아침)형인 신주쿠에는 골든가이가 있다!<br>- 구글맵 켜서 숙소 위치 미리 파악하기</td>
+                    <td><button class="btn-map" onclick="searchMap('Shinjuku Station')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>신주쿠 골든가이</td>
+                    <td>자유 늦게까지</td>
+                    <td class="note">- 분위기 아주 좋은 위스키바. 비교적 저렴한 가격으로 여러가지 일본 위스키 등을 즐길 수 있음.<br>- 바텐더와 스몰토크를 원하면 바 테이블에 앉고, 원하지 않으면 일반 테이블로.</td>
+                    <td><button class="btn-map" onclick="searchMap('Shinjuku Golden Gai')">지도 보기</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="day-header day-green">2일차: 하라주쿠 & 시부야 & 아사쿠사</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>장소</th>
+                    <th>시간</th>
+                    <th>내용/비고</th>
+                    <th>지도</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>신파치 식당</td>
+                    <td>09:00 ~ 10:30</td>
+                    <td class="note">- 일본 가정식을 즐길 수 있는 식당</td>
+                    <td><button class="btn-map" onclick="searchMap('Shinpachi Shokudo Shinjuku')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>메이지 신궁</td>
+                    <td>10:30 ~ 12:00</td>
+                    <td class="note">- 메이지 시대를 대표하는 메이지 천황과 그의 황후 쇼켄 황태후의 신령(Shinto)을 모시는 대형 신사.<br>- 도심 속 넓은 녹지와 웅장함, 산책로, 연못 등이 있는 대형 공원.</td>
+                    <td><button class="btn-map" onclick="searchMap('Meiji Jingu')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>프리키 (돈카츠)</td>
+                    <td>12:30 ~ 14:00</td>
+                    <td class="note">- 젓가락으로 잘릴 만큼 부드러운 돈카츠로 유명한 흑돼지 돈카츠 맛집</td>
+                    <td><button class="btn-map" onclick="searchMap('Tonkatsu Daiki')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>시부야 스카이</td>
+                    <td>14:30 ~ 16:00</td>
+                    <td class="note">- 도쿄 타워를 보러가기 보다 도쿄 타워가 나오게 찍는 샷이 키포인트!<br>- 야키시무 롯폰 타워 배경으로 사진 많이 찍음.</td>
+                    <td><button class="btn-map" onclick="searchMap('Shibuya Sky')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>센소지 (아사쿠사)</td>
+                    <td>17:00 ~ 18:30</td>
+                    <td class="note">- 오사카에 오코노미야키가 있다면 도쿄에는 몬자야키가 있다!<br>- 일본에서 가장 오래된 사찰.<br>- 구경만으로도 의미가 있을 것 같음.</td>
+                    <td><button class="btn-map" onclick="searchMap('Sensoji')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>Hot Spoon (카레)</td>
+                    <td>19:40 ~ 20:50</td>
+                    <td class="note">- 일본에서 가장 높은 전망타워의 인스타에 자주 나오는 곳!<br>- 밀려 있는 쇼핑들도 구경하며 여유를 둠.</td>
+                    <td><button class="btn-map" onclick="searchMap('Hot Spoon Shinjuku')">지도 보기</button></td>
+                </tr>
+                 <tr>
+                    <td>신주쿠 골든가이</td>
+                    <td>23:00 ~</td>
+                    <td class="note">- 도쿄 여행 다녀온 친구 추천 최애는 여기가 제일 맛있었다!<br>- 일본 3대 관람차 중 하나!<br>- 이색적인 선술집이 많은 곳으로 유명한 골목.</td>
+                    <td><button class="btn-map" onclick="searchMap('Shinjuku Golden Gai')">지도 보기</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="day-header day-blue">3일차: 해리포터 & 온천 & 요코초 (이미지상 2일차)</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>장소</th>
+                    <th>시간</th>
+                    <th>내용/비고</th>
+                    <th>지도</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>츠지한 아카사카</td>
+                    <td>10:30 ~ 12:00</td>
+                    <td class="note">- 웨이팅이 죽음. 일본 라멘 관련한 리뷰에서도 좋은 평점을 받고 있음.</td>
+                    <td><button class="btn-map" onclick="searchMap('Tsujihan Akasaka Ark Hills')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>미스터도넛 & 커피</td>
+                    <td>12:00 ~ 12:30</td>
+                    <td class="note">- 일본 도넛 체인점인 폰 데 링은 디저트로 즐기는 것도 좋을 듯.</td>
+                    <td><button class="btn-map" onclick="searchMap('Mister Donut')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>해리포터 스튜디오</td>
+                    <td>12:30 ~ 15:30</td>
+                    <td class="note">- 해리포터 덕후라면 꼭!</td>
+                    <td><button class="btn-map" onclick="searchMap('Warner Bros. Studio Tour Tokyo')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>토시마엔 니와노유</td>
+                    <td>15:30 ~ 17:30</td>
+                    <td class="note">- 지친 다리를 온천에서 풀자!</td>
+                    <td><button class="btn-map" onclick="searchMap('Toshimaen Niwanoyu')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>야키니쿠 산큐</td>
+                    <td>17:30 ~ 19:00</td>
+                    <td class="note">- Wholesaler direct Yakiniku Sanyku Toshimaen shop. 일본 사람들이 야키니쿠를 즐길 수 있는 곳!</td>
+                    <td><button class="btn-map" onclick="searchMap('Yakiniku Sankyu Toshimaen')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>오모이데 요코초</td>
+                    <td>19:00 ~ 21:00</td>
+                    <td class="note">- 꼬치 요리와 다양한 타다끼 음식들을 위주로 선술집이 즐비한 골목!</td>
+                    <td><button class="btn-map" onclick="searchMap('Omoide Yokocho')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>돈키호테 (쇼핑)</td>
+                    <td>23:00 ~</td>
+                    <td class="note">- 돈키호테에서 쇼핑하고 숙소로 귀가 OR 자유롭게 즐기기</td>
+                    <td><button class="btn-map" onclick="searchMap('Don Quijote Shinjuku')">지도 보기</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="day-header day-blue">4일차: 에비스 & 롯폰기 힐즈 (이미지상 3일차)</div>
+        <table>
+             <thead>
+                <tr>
+                    <th>장소</th>
+                    <th>시간</th>
+                    <th>내용/비고</th>
+                    <th>지도</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>이소마루 수산</td>
+                    <td>09:00 ~ 10:30</td>
+                    <td class="note">- 24시간 영업하는 초밥집 지점으로 스시 먹고 출발</td>
+                    <td><button class="btn-map" onclick="searchMap('Isomaru Suisan Shinjuku')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>에비스 가든 플레이스</td>
+                    <td>11:00 ~ 13:00</td>
+                    <td class="note">- 에비스 맥주를 체험하고 야외 즐길거리가 있는 장소</td>
+                    <td><button class="btn-map" onclick="searchMap('Yebisu Garden Place')">지도 보기</button></td>
+                </tr>
+                <tr>
+                    <td>롯폰기 힐즈/모리미술관</td>
+                    <td>14:00 ~ 16:00</td>
+                    <td class="note">- 카레가 맛있는 곳!</td>
+                    <td><button class="btn-map" onclick="searchMap('Roppongi Hills')">지도 보기</button></td>
+                </tr>
+                 <tr>
+                    <td>곤파치 (니시아자부)</td>
+                    <td>17:00 ~ 19:00</td>
+                    <td class="note">- 킬빌 거주지 했던 성. 장어덮밥/히츠마부시 구글 평점 4.8 ★ 미친 추천집</td>
+                    <td><button class="btn-map" onclick="searchMap('Gonpachi Nishi-Azabu')">지도 보기</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+         <div class="day-header day-green">5일차: 라멘 & 귀국 (이미지상 4일차)</div>
+         <table>
+             <thead>
+                 <tr>
+                     <th>장소</th>
+                     <th>시간</th>
+                     <th>내용/비고</th>
+                     <th>지도</th>
+                 </tr>
+             </thead>
+             <tbody>
+                 <tr>
+                     <td>Ramen Kamo to Negi</td>
+                     <td>09:30 ~ 10:00</td>
+                     <td class="note">- 오리육수로 하는 라멘</td>
+                     <td><button class="btn-map" onclick="searchMap('Ramen Kamo to Negi Shibuya')">지도 보기</button></td>
+                 </tr>
+                 <tr>
+                     <td>긴자</td>
+                     <td>11:00 ~ 13:30</td>
+                     <td class="note">- 우동은 우동신으로 입맛 감자부터</td>
+                     <td><button class="btn-map" onclick="searchMap('Ginza')">지도 보기</button></td>
+                 </tr>
+                 <tr>
+                     <td>공항 이동</td>
+                     <td>13:30 ~</td>
+                     <td class="note">- 복귀 준비</td>
+                     <td><button class="btn-map" onclick="searchMap('Narita Airport')">지도 보기</button></td>
+                 </tr>
+             </tbody>
+         </table>
+
+    </div>
+
+    <div class="map-container">
+        <iframe id="mapFrame" src="https://maps.google.com/maps?q=Shinjuku&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+    </div>
+</div>
+
+<script>
+    function searchMap(location) {
+        const mapFrame = document.getElementById('mapFrame');
+        const query = encodeURIComponent(location);
+        mapFrame.src = `https://maps.google.com/maps?q=${query}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+        
+        if (window.innerWidth <= 768) {
+            document.querySelector('.map-container').scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+</script>
+
+</body>
+</html>
